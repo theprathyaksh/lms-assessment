@@ -53,20 +53,8 @@ A simple Java-based Library Management System created using Maven and JUnit for 
 
 ## Test Reports
 
-After running the tests, the following HTML reports are generated. Use a browser to open the provided links to view test results.
-The HTML Reports are attached in the folder. 
+### After running the tests, the following HTML reports are generated. Use a browser to open the provided links to view test results.
 
-### **Add Books**
-[View Test Report](http://localhost:63342/LibraryManagementSystem/Test%20Results%20-%20testAddBook.html)
-
-### **Borrow Books**
-[View Test Report](http://localhost:63342/LibraryManagementSystem/Test%20Results%20-%20testBorrowBook.html)
-
-### **Return Books**
-[View Test Report](http://localhost:63342/LibraryManagementSystem/Test%20Results%20-%20testReturnBook.html)
-
-### **View Available Books**
-[View Test Report](http://localhost:63342/LibraryManagementSystem/Test%20Results%20-%20testViewAvailableBooks.html)
 
 ---
 
