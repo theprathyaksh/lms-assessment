@@ -13,9 +13,15 @@ public class Library implements LibraryActions {
     }
     @Override
     public void addBook(Book book) {
+        // Book details can't be empty
         if (book == null || book.getIsbn().trim().isEmpty() || book.getTitle().trim().isEmpty() || book.getAuthor().trim().isEmpty()) {
             throw new IllegalArgumentException("Book details cannot be empty.");
         }
+        //publication year must be four digits
+        if (book.getPublicationYear() < 1000 || book.getPublicationYear() > 9999) {
+            throw new IllegalArgumentException("Publication year must be a valid four-digit number.");
+        }
+        //duplicate publications not allowed
         if (books.containsKey(book.getIsbn())) {
             throw new IllegalArgumentException("Book with this ISBN already exists.");
         }
