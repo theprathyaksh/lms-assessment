@@ -5,20 +5,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class LibraryTest {
-
+public class testViewAvailableBooks {
     private Library library;
 
     @BeforeEach
     void setUp() {
         library = new Library();
     }
-
-
-
-
     @Test
     void testViewAvailableBooks() {
         Book book1 = new Book("12345", "Java Basics", "John Doe", 2020);
