@@ -34,6 +34,30 @@ class LibraryTest {
         assertEquals("Book details cannot be empty.", exception.getMessage());
     }
 
+    @Test
+    void testAddBookWithInvalidPublicationYearThrowsException() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            library.addBook(new Book("12345", "Java Basics", "John Doe", 99)); // Invalid year
+        });
+        assertEquals("Publication year must be a valid four-digit number.", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            library.addBook(new Book("12345", "Java Basics", "John Doe", 10000)); // Invalid year
+        });
+        assertEquals("Publication year must be a valid four-digit number.", exception.getMessage());
+    }
+
+    @Test
+    void testAddBookWithValidPublicationYear() {
+        Book book = new Book("12345", "Java Basics", "John Doe", 2020); // Valid year
+        library.addBook(book);
+
+        List<Book> availableBooks = library.viewAvailableBooks();
+        assertEquals(1, availableBooks.size());
+        assertEquals(2020, availableBooks.get(0).getPublicationYear());
+    }
+
+
 
     @Test
     void testAddDuplicateBookThrowsException() {
