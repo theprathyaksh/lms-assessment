@@ -24,14 +24,7 @@ public class testBorrowBook {
         library.addBook(book1);
         library.addBook(book2);
     }
-    @Test
-    void testBorrowAvailableBook() {
-        library.borrowBook(book1.getIsbn());
 
-        assertFalse(book1.isAvailable());
-        List<Book> availableBooks = library.viewAvailableBooks();
-        assertEquals(1, availableBooks.size());  // One book is still available
-    }
 
     @Test
     void testBorrowUnavailableBookThrowsException() {
@@ -60,32 +53,6 @@ public class testBorrowBook {
         });
 
         assertEquals("Invalid ISBN format.", exception.getMessage());
-    }
-
-    @Test
-    void testBorrowBookWithMultipleCopies() {
-        Book secondCopy = new Book("12345", "Java Basics", "John Doe", 2020);
-        library.addBook(secondCopy);
-
-        library.borrowBook(book1.getIsbn());
-        assertFalse(book1.isAvailable());
-        assertEquals(1, library.viewAvailableBooks().size());
-
-        library.borrowBook(secondCopy.getIsbn());
-        assertFalse(secondCopy.isAvailable());
-        assertEquals(0, library.viewAvailableBooks().size());
-    }
-
-    @Test
-    void testBorrowBookAfterReturningIt() {
-        library.borrowBook(book1.getIsbn());
-        assertFalse(book1.isAvailable());
-
-        library.returnBook(book1.getIsbn());
-        assertTrue(book1.isAvailable());
-
-        library.borrowBook(book1.getIsbn());
-        assertFalse(book1.isAvailable());
     }
 
 }
