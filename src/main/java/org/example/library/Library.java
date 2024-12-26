@@ -21,7 +21,7 @@ public class Library implements LibraryActions {
         if (book.getPublicationYear() < 1000 || book.getPublicationYear() > 9999) {
             throw new IllegalArgumentException("Publication year must be a valid four-digit number.");
         }
-        //duplicate publications not allowed
+        //duplicate isbn not allowed
         if (books.containsKey(book.getIsbn())) {
             throw new IllegalArgumentException("Book with this ISBN already exists.");
         }
