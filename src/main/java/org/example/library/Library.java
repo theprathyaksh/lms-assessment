@@ -13,6 +13,9 @@ public class Library implements LibraryActions {
     }
     @Override
     public void addBook(Book book) {
+        if (book == null || book.getIsbn().trim().isEmpty() || book.getTitle().trim().isEmpty() || book.getAuthor().trim().isEmpty()) {
+            throw new IllegalArgumentException("Book details cannot be empty.");
+        }
         if (books.containsKey(book.getIsbn())) {
             throw new IllegalArgumentException("Book with this ISBN already exists.");
         }

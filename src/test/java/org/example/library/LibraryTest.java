@@ -27,6 +27,15 @@ class LibraryTest {
     }
 
     @Test
+    void testAddEmptyBookThrowsException() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            library.addBook(new Book("", "", "", 0));
+        });
+        assertEquals("Book details cannot be empty.", exception.getMessage());
+    }
+
+
+    @Test
     void testAddDuplicateBookThrowsException() {
         Book book = new Book("12345", "Java Basics", "John Doe", 2020);
         library.addBook(book);
