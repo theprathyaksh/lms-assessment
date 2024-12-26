@@ -15,20 +15,45 @@ public class Library implements LibraryActions {
     @Override
     public void addBook(Book book) {
         addCallCount++;
-        // Book details can't be empty
-        if (book == null || book.getIsbn().trim().isEmpty() || book.getTitle().trim().isEmpty() || book.getAuthor().trim().isEmpty()) {
-            throw new IllegalArgumentException("Book details cannot be empty.");
+
+        // Ensure the book object is not null
+        if (book == null) {
+            throw new IllegalArgumentException("Book details cannot be null.");
         }
-        //publication year must be four digits
-        if (book.getPublicationYear() < 1000 || book.getPublicationYear() > 9999) {
+
+        // Trim all fields
+        String isbn = book.getIsbn().trim();
+        String title = book.getTitle().trim();
+        String author = book.getAuthor().trim();
+        int publicationYear = book.getPublicationYear();
+
+        // Validate ISBN: cannot be empty and must be numeric
+        if (isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be empty.");
+        }
+        if (!isbn.matches("\\d+")) { // Ensure ISBN contains only digits
+            throw new IllegalArgumentException("ISBN must be numeric.");
+        }
+
+        // Validate title and author: cannot be empty
+        if (title.isEmpty() || author.isEmpty()) {
+            throw new IllegalArgumentException("Book title and author cannot be empty.");
+        }
+
+        // Validate publication year: must be four digits
+        if (publicationYear < 1000 || publicationYear > 9999) {
             throw new IllegalArgumentException("Publication year must be a valid four-digit number.");
         }
-        //duplicate isbn not allowed
-        if (books.containsKey(book.getIsbn())) {
+
+        // Ensure the ISBN is unique
+        if (books.containsKey(isbn)) {
             throw new IllegalArgumentException("Book with this ISBN already exists.");
         }
-        books.put(book.getIsbn(), book);
+
+        // Add the book to the collection
+        books.put(isbn, new Book(isbn, title, author, publicationYear));
     }
+
     public void addBooksFromString(String input) {
         addCallCount++;
 

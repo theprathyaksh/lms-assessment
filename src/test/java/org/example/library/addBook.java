@@ -148,6 +148,69 @@ public class addBook {
 
         assertEquals("Invalid book data format.", exception.getMessage());
     }
+    @Test
+    void testAddBookWithSpecialCharactersInFields() {
+        Book book = new Book("12345", "Java@Basics!", "John#Doe$", 2020);
+        library.addBook(book);
+
+        List<Book> availableBooks = library.viewAvailableBooks();
+        assertEquals(1, availableBooks.size());
+        assertEquals("Java@Basics!", availableBooks.get(0).getTitle());
+        assertEquals("John#Doe$", availableBooks.get(0).getAuthor());
+    }
+    @Test
+    void testAddBookWithLeadingOrTrailingWhitespaces() {
+        Book book = new Book(" 12345 ", " Java Basics ", " John Doe ", 2020);
+        library.addBook(book);
+
+        List<Book> availableBooks = library.viewAvailableBooks();
+        assertEquals(1, availableBooks.size());
+        assertEquals("12345", availableBooks.get(0).getIsbn());
+        assertEquals("Java Basics", availableBooks.get(0).getTitle());
+        assertEquals("John Doe", availableBooks.get(0).getAuthor());
+    }
+    @Test
+    void testAddBooksFromStringWithEmptyInputThrowsException() {
+        String input = "";
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            library.addBooksFromString(input);
+        });
+
+        assertEquals("Invalid input format. Specify delimiters using //.", exception.getMessage());
+    }
+    @Test
+    void testAddBookWithNonNumericISBNThrowsException() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            library.addBook(new Book("ISBN123", "Java Basics", "John Doe", 2020));
+        });
+
+        assertEquals("ISBN must be numeric.", exception.getMessage());
+    }
+    @Test
+    void testAddBooksFromStringWithMixedData() {
+        String input = "//[;]\n12345,Java Basics,John Doe,2020;67890,Advanced Java,Jane Doe,2019;Invalid,Book";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            library.addBooksFromString(input);
+        });
+
+        assertEquals("Invalid book data format.", exception.getMessage());
+        assertEquals(0, library.viewAvailableBooks().size()); // Ensure no books are added
+    }
+    @Test
+    void testAddBookWithBoundaryPublicationYear() {
+        Book book1 = new Book("12345", "Old Book", "John Doe", 0000);
+        Book book2 = new Book("67890", "Future Book", "Jane Doe", 9999);
+
+        library.addBook(book1);
+        library.addBook(book2);
+
+        List<Book> availableBooks = library.viewAvailableBooks();
+        assertEquals(2, availableBooks.size());
+        assertEquals(0000, availableBooks.get(0).getPublicationYear());
+        assertEquals(9999, availableBooks.get(1).getPublicationYear());
+    }
+
 
 
 }
