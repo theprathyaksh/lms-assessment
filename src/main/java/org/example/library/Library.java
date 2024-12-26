@@ -14,55 +14,55 @@ public class Library implements LibraryActions {
     }
     @Override
     public void addBook(Book book) {
-        addCallCount++;
+            addCallCount++;
 
-        // Ensure the book object is not null
-        if (book == null) {
-            throw new IllegalArgumentException("Book details cannot be null.");
+            // Ensure the book object is not null
+            if (book == null) {
+                throw new IllegalArgumentException("Book details cannot be null.");
+            }
+
+            // Trim all fields
+            String isbn = book.getIsbn().trim();
+            String title = book.getTitle().trim();
+            String author = book.getAuthor().trim();
+            int publicationYear = book.getPublicationYear();
+
+            // Validate ISBN: cannot be empty and must be numeric
+            if (isbn.isEmpty()) {
+                throw new IllegalArgumentException("ISBN cannot be empty.");
+            }
+            if (!isbn.matches("\\d+")) { // Ensure ISBN contains only digits
+                throw new IllegalArgumentException("ISBN must be numeric.");
+            }
+
+            // Validate title and author: cannot be empty
+            if (title.isEmpty() || author.isEmpty()) {
+                throw new IllegalArgumentException("Book title and author cannot be empty.");
+            }
+
+            // Validate publication year: must be four digits
+            if (publicationYear < 1000 || publicationYear > 9999) {
+                throw new IllegalArgumentException("Publication year must be a valid four-digit number.");
+            }
+
+            // Ensure the ISBN is unique
+            if (books.containsKey(isbn)) {
+                throw new IllegalArgumentException("Book with this ISBN already exists.");
+            }
+
+            if (book.getPublicationYear() < 1000 || book.getPublicationYear() > 9999) {
+                throw new IllegalArgumentException("Publication year must be between 1000 and 9999.");
+            }
+
+            if (book.getIsbn().trim().isEmpty() || book.getTitle().trim().isEmpty() || book.getAuthor().trim().isEmpty()) {
+                throw new IllegalArgumentException("Book details cannot be empty.");
+            }
+
+
+
+            // Add the book to the collection
+            books.put(isbn, new Book(isbn, title, author, publicationYear));
         }
-
-        // Trim all fields
-        String isbn = book.getIsbn().trim();
-        String title = book.getTitle().trim();
-        String author = book.getAuthor().trim();
-        int publicationYear = book.getPublicationYear();
-
-        // Validate ISBN: cannot be empty and must be numeric
-        if (isbn.isEmpty()) {
-            throw new IllegalArgumentException("ISBN cannot be empty.");
-        }
-        if (!isbn.matches("\\d+")) { // Ensure ISBN contains only digits
-            throw new IllegalArgumentException("ISBN must be numeric.");
-        }
-
-        // Validate title and author: cannot be empty
-        if (title.isEmpty() || author.isEmpty()) {
-            throw new IllegalArgumentException("Book title and author cannot be empty.");
-        }
-
-        // Validate publication year: must be four digits
-        if (publicationYear < 1000 || publicationYear > 9999) {
-            throw new IllegalArgumentException("Publication year must be a valid four-digit number.");
-        }
-
-        // Ensure the ISBN is unique
-        if (books.containsKey(isbn)) {
-            throw new IllegalArgumentException("Book with this ISBN already exists.");
-        }
-
-        if (book.getPublicationYear() < 1000 || book.getPublicationYear() > 9999) {
-            throw new IllegalArgumentException("Publication year must be between 1000 and 9999.");
-        }
-
-        if (book.getIsbn().trim().isEmpty() || book.getTitle().trim().isEmpty() || book.getAuthor().trim().isEmpty()) {
-            throw new IllegalArgumentException("Book details cannot be empty.");
-        }
-
-
-
-        // Add the book to the collection
-        books.put(isbn, new Book(isbn, title, author, publicationYear));
-    }
 
     public void addBooksFromString(String input) {
         addCallCount++;
@@ -120,17 +120,33 @@ public class Library implements LibraryActions {
         return addCallCount;
     }
 
-    @Override
     public void borrowBook(String isbn) {
-        Book book = books.get(isbn);
-        if (book == null) {
+        // Check if the ISBN is valid (non-empty and numeric)
+        if (isbn == null || isbn.trim().isEmpty() || !isbn.matches("\\d+")) {
+            throw new IllegalArgumentException("Invalid ISBN format.");
+        }
+
+        // Retrieve the list of books matching the ISBN
+        List<Book> matchingBooks = books.values().stream()
+                .filter(book -> book.getIsbn().equals(isbn))
+                .toList();
+
+        if (matchingBooks.isEmpty()) {
             throw new IllegalArgumentException("Book not found.");
         }
-        if (!book.isAvailable()) {
-            throw new IllegalStateException("Book is not available.");
-        }
-        book.setAvailable(false);
+
+        // Find the first available copy
+        Book bookToBorrow = matchingBooks.stream()
+                .filter(Book::isAvailable)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No copies of this book are available to borrow."));
+
+        // Mark the book as borrowed (unavailable)
+        bookToBorrow.setAvailable(false);
     }
+
+
+
 
     @Override
     public void returnBook(String isbn) {
