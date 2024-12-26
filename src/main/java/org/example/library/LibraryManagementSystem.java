@@ -8,6 +8,7 @@ public class LibraryManagementSystem {
         Library library = new Library();
 
         while(true){
+            System.out.println("Welcome to Kata Library Management System, choose an option below to start");
             System.out.println("Enter option: ");
             System.out.println("1.Add Books");
             System.out.println("2.Borrow Books");
