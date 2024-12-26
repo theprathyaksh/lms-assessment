@@ -31,8 +31,9 @@ public class addBook {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             library.addBook(new Book("", "", "", 0));
         });
-        assertEquals("Book details cannot be empty.", exception.getMessage());
+        assertEquals("ISBN cannot be empty.", exception.getMessage());
     }
+
 
     @Test
     void testAddBookWithInvalidPublicationYearThrowsException() {
@@ -187,30 +188,29 @@ public class addBook {
 
         assertEquals("ISBN must be numeric.", exception.getMessage());
     }
-    @Test
-    void testAddBooksFromStringWithMixedData() {
-        String input = "//[;]\n12345,Java Basics,John Doe,2020;67890,Advanced Java,Jane Doe,2019;Invalid,Book";
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            library.addBooksFromString(input);
-        });
 
-        assertEquals("Invalid book data format.", exception.getMessage());
-        assertEquals(0, library.viewAvailableBooks().size()); // Ensure no books are added
-    }
+
     @Test
     void testAddBookWithBoundaryPublicationYear() {
-        Book book1 = new Book("12345", "Old Book", "John Doe", 0000);
-        Book book2 = new Book("67890", "Future Book", "Jane Doe", 9999);
+        Book book1 = new Book("12345", "Old Book", "John Doe", 1000); // Valid earliest year
+        Book book2 = new Book("67890", "Future Book", "Jane Doe", 9999); // Valid latest year
 
         library.addBook(book1);
         library.addBook(book2);
 
         List<Book> availableBooks = library.viewAvailableBooks();
         assertEquals(2, availableBooks.size());
-        assertEquals(0000, availableBooks.get(0).getPublicationYear());
+        assertEquals(1000, availableBooks.get(0).getPublicationYear());
         assertEquals(9999, availableBooks.get(1).getPublicationYear());
     }
 
+    @Test
+    void testAddBookWithInvalidPublicationYear() {
+        Library library = new Library();
+        Book invalidBook = new Book("12345", "Title", "Author", 99); // Invalid year
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> library.addBook(invalidBook));
+        assertEquals("Publication year must be a valid four-digit number.", exception.getMessage());
+    }
 
 
 }

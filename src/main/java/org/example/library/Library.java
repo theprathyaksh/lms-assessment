@@ -50,6 +50,16 @@ public class Library implements LibraryActions {
             throw new IllegalArgumentException("Book with this ISBN already exists.");
         }
 
+        if (book.getPublicationYear() < 1000 || book.getPublicationYear() > 9999) {
+            throw new IllegalArgumentException("Publication year must be between 1000 and 9999.");
+        }
+
+        if (book.getIsbn().trim().isEmpty() || book.getTitle().trim().isEmpty() || book.getAuthor().trim().isEmpty()) {
+            throw new IllegalArgumentException("Book details cannot be empty.");
+        }
+
+
+
         // Add the book to the collection
         books.put(isbn, new Book(isbn, title, author, publicationYear));
     }
